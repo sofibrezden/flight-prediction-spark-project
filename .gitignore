@@ -15,6 +15,7 @@ spark-warehouse/
 
 Dockerfile
 ./data
+./output
 
 # IDE
 .idea/
