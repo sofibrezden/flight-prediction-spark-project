@@ -13,9 +13,8 @@ metastore_db/
 derby.log
 spark-warehouse/
 
-
-./data
-./output
+data/
+output/
 
 # IDE
 .idea/
