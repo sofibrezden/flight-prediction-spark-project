@@ -14,7 +14,8 @@ derby.log
 spark-warehouse/
 
 Dockerfile
-./data
+data/
+output/
 
 # IDE
 .idea/
