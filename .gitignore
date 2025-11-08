@@ -13,6 +13,8 @@ metastore_db/
 derby.log
 spark-warehouse/
 
+Dockerfile
+./data
 
 # IDE
 .idea/
