@@ -32,34 +32,43 @@ def create_fact_flight(flights_df, dim_airport, dim_marketing, dim_operating, di
         on="FlightDate",
         how="left"
     )
-
-    dep_time_df = dim_time.withColumnRenamed("time_id", "departure_time_id") \
-                          .withColumnRenamed("hour", "dep_hour") \
-                          .withColumnRenamed("minute", "dep_minute")
+    dep_time_df = dim_time.select(
+        col("time_id").alias("departure_time_id"),
+        col("hour").alias("dep_hour_key"),
+        col("minute").alias("dep_minute_key")
+    )
 
     fact = fact.withColumn("dep_hour", expr("int(DepTime/100)")) \
-               .withColumn("dep_minute", expr("DepTime % 100"))
+        .withColumn("dep_minute", expr("DepTime % 100"))
 
     fact = fact.join(
         dep_time_df,
-        (fact["dep_hour"] == col("dep_hour")) & (fact["dep_minute"] == col("dep_minute")),
+        (fact["dep_hour"] == col("dep_hour_key")) &
+        (fact["dep_minute"] == col("dep_minute_key")),
         "left"
+    ).drop("dep_hour_key", "dep_minute_key")
+
+    fact = fact.withColumn("dep_hour", expr("int(coalesce(DepTime,0)/100)")) \
+        .withColumn("dep_minute", expr("coalesce(DepTime,0) % 100"))
+
+    arr_time_df = dim_time.select(
+        col("time_id").alias("arrival_time_id"),
+        col("hour").alias("arr_hour_key"),
+        col("minute").alias("arr_minute_key")
     )
 
-    arr_time_df = dim_time.withColumnRenamed("time_id", "arrival_time_id") \
-                          .withColumnRenamed("hour", "arr_hour") \
-                          .withColumnRenamed("minute", "arr_minute")
-
     fact = fact.withColumn("arr_hour", expr("int(ArrTime/100)")) \
-               .withColumn("arr_minute", expr("ArrTime % 100"))
+        .withColumn("arr_minute", expr("ArrTime % 100"))
 
     fact = fact.join(
         arr_time_df,
-        (fact["arr_hour"] == col("arr_hour")) & (fact["arr_minute"] == col("arr_minute")),
+        (fact["arr_hour"] == col("arr_hour_key")) &
+        (fact["arr_minute"] == col("arr_minute_key")),
         "left"
-    )
+    ).drop("arr_hour_key", "arr_minute_key")
 
-    fact = fact.withColumnRenamed("TailNumber", "Tail_Number")
+    fact = fact.withColumn("arr_hour", expr("int(ArrTime/100)")) \
+        .withColumn("arr_minute", expr("ArrTime % 100"))
 
     fact = fact.withColumn(
         "status",
