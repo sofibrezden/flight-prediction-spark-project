@@ -37,7 +37,7 @@ def main():
     save_dimension(dim_date, "Dim_Date")
 
     print("Creating FactFlight")
-    fact_flight = create_fact_flight(flights_df, dim_airport, dim_marketing, dim_operating)
+    fact_flight = create_fact_flight(flights_df, dim_airport, dim_marketing, dim_operating, dim_date, dim_time)
     save_dimension(fact_flight, "FactFlight")
     spark.stop()
 
