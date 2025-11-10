@@ -7,6 +7,7 @@ from dimensions.dim_time import create_dim_time
 from dimensions.dim_date import create_dim_date
 from dimensions.fact_table import create_fact_flight
 
+
 def main():
     spark = create_spark_session()
 
@@ -39,7 +40,6 @@ def main():
     print("Creating FactFlight")
     fact_flight = create_fact_flight(flights_df, dim_airport, dim_marketing, dim_operating, dim_date, dim_time)
     save_dimension(fact_flight, "FactFlight")
-    spark.stop()
 
     spark.stop()
 
