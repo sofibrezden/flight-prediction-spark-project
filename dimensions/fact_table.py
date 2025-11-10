@@ -72,7 +72,9 @@ def create_fact_flight(flights_df, dim_airport, dim_marketing, dim_operating, di
 
     fact = fact.withColumn(
         "status",
-        when(col("ArrDelayMinutes") > 30, "delayed").otherwise("on_time")
+        when(col("Cancelled") == True, "cancelled")
+        .when(col("ArrDelayMinutes") > 30, "delayed")
+        .otherwise("on_time")
     )
 
     fact = fact.withColumn(
