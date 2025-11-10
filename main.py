@@ -19,30 +19,33 @@ def main():
     print("Creating Dim_Marketing_Airline")
     dim_marketing = create_dim_marketing_airline(flights_df, airlines_df)
     save_dimension(dim_marketing, "Dim_Marketing_Airline")
+    dim_marketing = spark.read.csv("output/Dim_Marketing_Airline.csv", header=True, inferSchema=True)
 
     print("Creating Dim_Operating_Airline")
     dim_operating = create_dim_operating_airline(flights_df, airlines_df)
     save_dimension(dim_operating, "Dim_Operating_Airline")
+    dim_operating = spark.read.csv("output/Dim_Operating_Airline.csv", header=True, inferSchema=True)
 
     print("Creating Dim_Airport")
     dim_airport = create_dim_airport(flights_df)
     save_dimension(dim_airport, "Dim_Airport")
+    dim_airport = spark.read.csv("output/Dim_Airport.csv", header=True, inferSchema=True)
 
     print("Creating Dim_Time")
     dim_time = create_dim_time(flights_df, spark)
     save_dimension(dim_time, "Dim_Time")
+    dim_time = spark.read.csv("output/Dim_Time.csv", header=True, inferSchema=True)
 
     print("Creating Dim_Date")
     dim_date = create_dim_date(flights_df, spark)
     save_dimension(dim_date, "Dim_Date")
+    dim_date = spark.read.csv("output/Dim_Date.csv", header=True, inferSchema=True)
 
     print("Creating FactFlight")
     fact_flight = create_fact_flight(flights_df, dim_airport, dim_marketing, dim_operating, dim_date, dim_time)
     save_dimension(fact_flight, "FactFlight")
-    spark.stop()
 
     spark.stop()
-
 
 if __name__ == "__main__":
     main()
