@@ -21,7 +21,8 @@ def create_dim_time(flights_df, spark):
         "period_of_day",
         when((col("hour") >= 5) & (col("hour") < 12), "morning")
         .when((col("hour") >= 12) & (col("hour") < 17), "afternoon")
-        .otherwise("evening")
+        .when((col("hour") >= 17) & (col("hour") < 21), "evening")
+        .otherwise("night")
     )
 
     time_df = time_df.dropDuplicates(["hour", "minute"]).na.drop()
